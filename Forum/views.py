@@ -4,11 +4,12 @@ from django.urls import reverse_lazy
 from .models import  Discussion
 
 from django.views.generic import (
-#     #  DetailView,
-      CreateView
-#       UpdateView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView
 # #      ListView,
-#      DeleteView
+
 )
 
 # class My_profileView(ListView):
@@ -34,27 +35,35 @@ class DiscussCreateView(CreateView):
     #     return super().form_valid(form)
 
 
-# #post Update page view
-# class ProfileUpdateView(UpdateView):
-#     model = Profile
-#     # context_object_name = 'profiles'
-#     fields=['profile_picture','bio','full_name','work','loaction','educations','email']
-#     template_name='Forum/profile_update_form.html'
-#     success_url = reverse_lazy("user_feeds:profile-page")
-
-#     # def form_valid(self,form):
-#     #     form.instance.author =self.request.user
-#     #     return super().form_valid(form)
+# #Detailpage view
+class DiscussDetailView(DetailView):
+    model= Discussion
+    context_object_name = 'details'
+    template_name='Forum/detail.html'
 
 
-# #post Delete page view
-# class ProfileDeleteView(DeleteView):
-#     model=Profile
-#     # context_object_name = 'profile_delete'
-#     template_name='Forum/profile_delete_form.html'
-#     success_url = reverse_lazy("homepage:article-list")
+
+#post Update page view
+class DiscussUpdateView(UpdateView):
+    model= Discussion
+    fields ='__all__'
+    # fields = ['title','image','details']
+    template_name='Forum/post_update_form.html'
+    success_url = reverse_lazy("Forum:profile-page")
+
+    # def form_valid(self,form):
+    #     form.instance.author =self.request.user
+    #     return super().form_valid(form)
+
+
+#post Delete page view
+class DiscussDeleteView(DeleteView):
+    model= Discussion
+    template_name='Forum/post_delete_form.html'
+    success_url = reverse_lazy("Forum:profile-page")
 
    
 
 def home(request):
-    return render(request,'Forum/discuss.html')
+    allquestions = Discussion.objects.all()
+    return render(request,'Forum/discuss.html',{'allquestions':allquestions})

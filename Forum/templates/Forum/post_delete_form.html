@@ -1,13 +1,13 @@
-{% extends 'homepage/main.html' %}
+{% extends 'Forum/main.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
 
-{% include 'homepage/navbar.html' %}
+
 
 
 <h1 style="text-align: center; background-color: rgb(233, 236, 239);"> Delete Blog Post</h1>    
-{% if user.is_authenticated %}
-    {% if user.id == post.author.id %}
+{% comment %} {% if user.is_authenticated %}
+    {% if user.id == post.author.id %} {% endcomment %}
        
        <form method="post" >
         {% csrf_token %}
@@ -20,10 +20,10 @@
             <button class="btn btn-danger col-sm-2 offset-md-5" type="submit">Delete</button>
         </form>
 
-    {% else %}
+    {% comment %} {% else %}
       <h3 style="color: red;">You're trying to delete someone else post!!You don't have permission to do so</h3>
     {% endif %}
-{% endif %}
+{% endif %} {% endcomment %}
 
  
 
