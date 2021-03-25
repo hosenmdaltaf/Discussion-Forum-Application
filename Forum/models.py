@@ -22,7 +22,7 @@ class Discussion(models.Model):
     image=models.ImageField(upload_to='post_images', blank=True, null=True)
     category = models.ForeignKey('Category',on_delete=models.CASCADE, null=True, blank=True)
     view_count=models.IntegerField(default=0)
-   # slug=models.SlugField(blank=True,unique=True)
+   # slug=models.SlugField(blank=True,unique=True)  
 
     def __str__(self):
         return str(self.creator) + '---' + str(self.title)

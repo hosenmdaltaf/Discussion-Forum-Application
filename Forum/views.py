@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse_lazy
 from .models import  Discussion
-
+from .models import Comment
+from .models import Category
+from .forms import CommentForm 
 from django.views.generic import (
-    DetailView,
+    # DetailView,
     CreateView,
     UpdateView,
     DeleteView
@@ -36,10 +38,33 @@ class DiscussCreateView(CreateView):
 
 
 # #Detailpage view
-class DiscussDetailView(DetailView):
-    model= Discussion
-    context_object_name = 'details'
-    template_name='Forum/detail.html'
+# class DiscussDetailView(DetailView):
+#     model= Discussion
+#     context_object_name = 'details'
+#     template_name='Forum/detail.html'
+
+
+def postdetail(request,id):
+    details=Discussion.objects.get(id=id)
+    post = get_object_or_404(Discussion, id=id)
+    latest= Discussion.objects.order_by('-qustion_date')[:5]
+   
+    comments_form = CommentForm()  
+
+    if request.method == 'POST': 
+        comments_form = CommentForm(request.POST ) 
+        if comments_form.is_valid(): 
+            # comments_form.instance.created_by = profile.request.user
+            comment = comments_form.save(commit=False)
+            comment.post = details
+            comments_form.save() 
+            return redirect("Forum:articale-detail", id=post.id )  
+        else: 
+            comments_form = CommentForm() 
+
+    comments=Comment.objects.filter(post=post)
+    return render(request,'Forum/detail.html',{'details':details,'comments':comments,'latest':latest})
+
 
 
 
@@ -62,8 +87,53 @@ class DiscussDeleteView(DeleteView):
     template_name='Forum/post_delete_form.html'
     success_url = reverse_lazy("Forum:profile-page")
 
-   
+#   class TaskList(LoginRequiredMixin, ListView):
+#     model = Task
+#     context_object_name = 'tasks'
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['tasks'] = context['tasks'].filter(user=self.request.user)
+#         context['count'] = context['tasks'].filter(complete=False).count()
+
+#         search_input = self.request.GET.get('search-area') or ''
+#         if search_input:
+#             context['tasks'] = context['tasks'].filter(    
+#                 title__startswith=search_input)
+
+#         context['search_input'] = search_input
+
+#         return context 
+
+
+
+# def gallery(request):
+#     category = request.GET.get('category')
+#     if category == None:
+#         photos = Photo.objects.all()
+#     else:
+#         photos = Photo.objects.filter(category__name=category)
+
+#     categories = Category.objects.all()
+#     context = {'categories': categories, 'photos': photos}
+#     return render(request, 'photos/gallery.html', context)
+
+
 
 def home(request):
-    allquestions = Discussion.objects.all()
-    return render(request,'Forum/discuss.html',{'allquestions':allquestions})
+    
+
+    category = request.GET.get('category')
+    if category == None:
+        allquestions = Discussion.objects.all()
+    else:
+        allquestions = Discussion.objects.filter(category__name=category)
+
+    categories = Category.objects.all()
+
+    # search_input = request.GET.get('search-area') or ''
+    # if search_input:
+    #     tasks = allquestions.filter(title__startswith=search_input)
+    # 'search_input':search_input
+
+    return render(request,'Forum/discuss.html',{'allquestions':allquestions,'categories':categories})

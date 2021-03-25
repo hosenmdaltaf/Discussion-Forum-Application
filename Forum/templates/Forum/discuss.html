@@ -31,34 +31,34 @@
      <aside class="menu">
 
 
-  <p class="menu-label">
-    General
-  </p>
+
+ <h1 class="menu-label ">
+   Read and Answer by Category
+  </h1> 
+ 
   <ul class="menu-list">
-    <li><a>Dashboard</a></li>
-    <li><a>Customers</a></li>
-  </ul>
-  <p class="menu-label">
-    Administration
-  </p>
-  <ul class="menu-list">
-    <li><a>Team Settings</a></li>
+  <li class="list-group-item">
+        <a href="{% url 'Forum:home' %}">All</a>
+  </li>
+  {% for cat in categories%} 
     <li>
-      <a class="is-active">Manage Your Team</a>
-      <ul>
-        <li><a>Members</a></li>
-        <li><a>Plugins</a></li>
-        <li><a>Add a member</a></li>
-      </ul>
+    <a href="{% url 'Forum:home' %}?category={{cat.name}}">
+    {{ cat.name }}</a>
     </li>
-    <li><a>Invitations</a></li>
-    <li><a>Cloud Storage Environment Settings</a></li>
-    <li><a>Authentication</a></li>
+  {% endfor %}
   </ul>
-  <p class="menu-label subtitle">
-    Transactions
-  </p>
-  <h1 class="subtitle">Hello World</h1>
+ 
+                      {% comment %} <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="{% url 'gallery' %}">All</a>
+                        </li>
+                        {% for category in categories %}
+                        <li class=" list-group-item">
+                            <a href="{% url 'gallery' %}?category={{category.name}}">
+                                {{category.name}}
+                            </a>
+                        </li>
+                        {% endfor %} {% endcomment %}
 
   <div class="tags">
   <span class="tag">One</span>
@@ -92,14 +92,26 @@
   
     <div class="level-item">
       <div class="field has-addons">
+
+{% comment %} <div id="search-add-wrapper">
+    <form method="GET" style="margin-top: 20px;display: flex;">
+        <input type='text' name='search-area' value="{{search_input}}">
+        <input class="button" type="submit" value='Search'>
+    </form>
+    <a id="add-link" href="{% url 'task-create' %}">&#x2b;</a>
+</div> {% endcomment %}
+
+<form method="GET" >
         <p class="control">
-          <input class="input is-primary" type="text" placeholder="Find a post">
+          <input class="input is-primary" type="text" name='search-area' value="{{search_input}} placeholder="Find a post">
         </p>
         <p class="control">
-          <button class="button is-primary">
+        
+         <button class="button is-primary" type="submit" value='Search'>
             Search
-          </button>
+        </button> 
         </p>
+</form>
       </div>
     </div>
   </div>
@@ -117,24 +129,24 @@
       <article class="media">
         <figure class="media-left">
           <p class="image is-64x64">
-            <img src="https://bulma.io/images/placeholders/128x128.png">
+            <img src="{{ discuss.creator.profile_picture.url}}">
           </p>
         </figure>
         <div class="media-content">
           <div class="content">
             <p>
-              <strong>John Smith</strong> <small>@johnsmith</small> <small>31m</small>
-              <br>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.
+              <small>@{{discuss.creator}}</small> <small>{{discuss.qustion_date}}</small>
+              <br><a href='{% url 'Forum:articale-detail' discuss.id %}'>
+              <strong>{{discuss.title }}</strong> </a>
             </p>
           </div>
           <nav class="level is-mobile">
             <div class="level-left">
               <a class="level-item">
-                <span class="icon is-small"><i class="fas fa-reply"></i></span>
+                <span class="icon is-small"><i class="fas fa-reply">Answer</i></span>
               </a>
               <a class="level-item">
-                <span class="icon is-small"><i class="fas fa-retweet"></i></span>
+                <span class="icon is-small"><i class="fas fa-retweet">{{ comments.count }}</i></span>
               </a>
               <a class="level-item">
                 <span class="icon is-small"><i class="fas fa-heart"></i></span>
@@ -148,45 +160,6 @@
       </article>
 
 {% endfor %}
-
-
-
-
-<article class="media">
-  <figure class="media-left">
-    <p class="image is-64x64">
-      <img src="https://bulma.io/images/placeholders/128x128.png">
-    </p>
-  </figure>
-  <div class="media-content">
-    <div class="content">
-      <p>
-        <strong>John Smith</strong> <small>@johnsmith</small> <small>31m</small>
-        <br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.
-      </p>
-    </div>
-    <nav class="level is-mobile">
-      <div class="level-left">
-        <a class="level-item">
-          <span class="icon is-small"><i class="fas fa-reply"></i></span>
-        </a>
-        <a class="level-item">
-          <span class="icon is-small"><i class="fas fa-retweet"></i></span>
-        </a>
-        <a class="level-item">
-          <span class="icon is-small"><i class="fas fa-heart"></i></span>
-        </a>
-      </div>
-    </nav>
-  </div>
-  <div class="media-right">
-    <button class="delete"></button>
-  </div>
-</article>
-
-
-  
 
 
     </div>

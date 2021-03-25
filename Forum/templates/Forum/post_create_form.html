@@ -9,7 +9,7 @@
 
 {% load crispy_forms_tags %}
 
-{% if user.is_authenticated %}
+{% comment %} {% if user.is_authenticated %} {% endcomment %}
     <form  method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row">
@@ -20,6 +20,6 @@
         <input class="btn btn-success col-md-6 offset-md-3" type="submit" value="Post">
     </form>
     
-{% endif %}
+{% comment %} {% endif %} {% endcomment %}
 
 {% endblock%} 
